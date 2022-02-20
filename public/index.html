@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Chat App</title>
+</head>
+<body>
+  <h1>Chat App</h1>
+
+  <div id="messages"></div>
+
+  <form action="#" onsubmit="sendMessage(event, document.getElementById('message').value)" id="form">
+    <input type="text" placeholder="Type your message here..." id="message">
+    <input type="submit" hidden />
+  </form>
+
+  <script>
+
+    function connectPoll(){
+      fetch('/poll')
+        .then(res => res.text())
+        .then(message => document.getElementById('messages').innerHTML += `<p>${message}</p>`)
+        .finally(() => { connectPoll() })
+    }
+
+    function sendMessage(event, message){
+      event.preventDefault()
+      fetch('/message', {
+        method: "POST",
+        body: message
+      })
+    }
+
+    connectPoll()
+  </script>
+</body>
+</html>

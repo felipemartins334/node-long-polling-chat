@@ -1,0 +1,13 @@
+{
+  "name": "long-polling-chat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon server/server.js"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.3"
+  }
+}
