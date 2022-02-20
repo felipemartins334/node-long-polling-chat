@@ -28,10 +28,16 @@ function handleMessage(req, res){
   let message = ''
 
   req.on('data', chunk => {
-    message+=chunk
+    message += chunk
   })
   req.on('end', () => {
-    emitMessage(message)
+    const [user , text] = message.split('|!@#$%') 
+    connection.query(`
+    INSERT INTO messages(created_at, username, content)
+    VALUES($1, $2, $3)
+    `, [new Date(), user, text])
+
+    emitMessage(text)
     res.end()
   })
 }

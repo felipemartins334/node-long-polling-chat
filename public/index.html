@@ -12,7 +12,8 @@
 
   <div id="messages"></div>
 
-  <form action="#" onsubmit="sendMessage(event, document.getElementById('message').value)" id="form">
+  <form action="#" onsubmit="sendMessage(event, document.getElementById('message').value, document.getElementById('username').value)" id="form">
+    <input type="text" placeholder="Username" id="username">
     <input type="text" placeholder="Type your message here..." id="message">
     <input type="submit" hidden />
   </form>
@@ -26,11 +27,12 @@
         .finally(() => { connectPoll() })
     }
 
-    function sendMessage(event, message){
+    function sendMessage(event, message, user){
       event.preventDefault()
+      let bodyMessage = `${user}|!@#$%${message}`
       fetch('/message', {
         method: "POST",
-        body: message
+        body: bodyMessage
       })
     }
 
