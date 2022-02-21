@@ -1,3 +1,91 @@
-h1{
-  color:red;
+body, html{
+  font-family: sans-serif;
+  width: 100%;
+  height: 100%;
+
+}
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+header{
+  width: 100%;
+  background-color: rgb(52, 52, 194);
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+#messages{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.message{
+  display: inline-block;
+  background-color: rgb(52, 52, 194);
+  color: white;
+  max-width: calc(100vw - 20px);
+  border-radius: 9px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.message_data{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 8px;
+}
+
+.message_data .user_data{
+  display: flex;
+  align-items: center;
+}
+
+.message_data .user_data .username{
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.message_data .user_data .data{
+  font-size: 13px;
+  font-weight: lighter;
+}
+
+.message_data .content{
+  font-size: 16px;
+}
+
+.message_form{ 
+  position: fixed;
+  max-width: calc(100vw - 20px);
+  margin-left: 10px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: 20px;
+}
+
+.message_form form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%
+}
+
+.message_form input{
+  width: 100%;
+  border: none;
+  height: 40px;
+  margin-bottom: 10px;
+  background-color: #e7e7e7;
+  border-radius: 9px;
+  padding-left: 5px;
 }

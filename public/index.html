@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,36 +8,82 @@
   <link rel="stylesheet" href="style.css">
   <title>Chat App</title>
 </head>
+
 <body>
-  <h1>Chat App</h1>
+  <header>
+    <h1>Chat App</h1>
+  </header>
 
   <div id="messages"></div>
-
-  <form action="#" onsubmit="sendMessage(event, document.getElementById('message').value, document.getElementById('username').value)" id="form">
-    <input type="text" placeholder="Username" id="username">
-    <input type="text" placeholder="Type your message here..." id="message">
-    <input type="submit" hidden />
-  </form>
+  
+  <div class="message_form">
+    <form action="#"
+      onsubmit="sendMessage(event, document.getElementById('message').value, document.getElementById('username').value)"
+      id="form">
+      <input type="text" placeholder="Username" id="username">
+      <input type="text" placeholder="Type your message here..." id="message">
+      <input type="submit" hidden />
+    </form>
+  </div>
 
   <script>
 
-    function connectPoll(){
+    function loadMessages() {
+      fetch('/messages')
+        .then(res => res.text())
+        .then(messages => {
+          let data = JSON.parse(messages)
+          data.forEach(message => {
+            document.getElementById('messages').innerHTML += `
+            <div class="message">
+              <div class="message_data">
+                <div class="user_data">
+                  <p class="username">${message.username}</p>
+                  <time class="data">${message.created_at.split('T')[0]}</time>
+                </div>
+                <p class="content">${message.content}</p>
+              </div>
+            </div>
+    `
+          })
+        })
+    }
+
+    function connectPoll() {
       fetch('/poll')
         .then(res => res.text())
-        .then(message => document.getElementById('messages').innerHTML += `<p>${message}</p>`)
+        .then(message => {
+        const data = JSON.parse(message)
+        document.getElementById('messages').innerHTML += `
+            <div class="message">
+              <div class="message_data">
+                <div class="user_data">
+                  <p class="username">${data.username}</p>
+                  <time class="data">${data.created_at.split('T')[0]}</time>
+                </div>
+                <p class="content">${data.content}</p>
+              </div>
+            </div>
+    `
+          })
         .finally(() => { connectPoll() })
     }
 
-    function sendMessage(event, message, user){
+    function sendMessage(event, message, user) {
       event.preventDefault()
-      let bodyMessage = `${user}|!@#$%${message}`
+      let bodyMessage = JSON.stringify({
+        username: user,
+        text: message
+      })
       fetch('/message', {
         method: "POST",
         body: bodyMessage
       })
     }
 
+    loadMessages()
     connectPoll()
   </script>
 </body>
+
 </html>

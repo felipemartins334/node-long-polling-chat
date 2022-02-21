@@ -1,4 +1,5 @@
 require('dotenv').config()
+const dayjs = require('dayjs')
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
@@ -13,6 +14,7 @@ let pool = []
 
 function handlePage(req, res){
   fs.createReadStream(publicPath + '/index.html').pipe(res)
+
 }
 
 function handleCSS(req, res){
@@ -31,26 +33,39 @@ function handleMessage(req, res){
     message += chunk
   })
   req.on('end', () => {
-    const [user , text] = message.split('|!@#$%') 
+    const { username, text } = JSON.parse(message)
+    const date = dayjs()
     connection.query(`
     INSERT INTO messages(created_at, username, content)
     VALUES($1, $2, $3)
-    `, [new Date(), user, text])
+    `, [date, username, text])
 
-    emitMessage(text)
+    emitMessage(text, username, date)
     res.end()
   })
 }
 
-function emitMessage(message){
-  for(let res of pool) res.end(message)
+function emitMessage(message, user, date){
+  const messageObject = {
+    username: user,
+    content: message,
+    created_at: date
+  }
+  for(let res of pool) res.end(JSON.stringify(messageObject))
 }
+
+async function getMessages(req, res){
+  const { rows: messages } = await connection.query(`SELECT * FROM messages`)
+  res.end(JSON.stringify(messages))
+}
+
 
 http.createServer((req, res) => {
 
   let { url, method } = req
 
   if(method === 'GET'){
+    if(url === '/messages') getMessages(req, res)
     if(url === '/page') handlePage(req, res)
     if(url === '/style.css') handleCSS(req,res)
     if(url === '/poll') handlePoll(req, res)
